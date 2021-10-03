@@ -18,6 +18,7 @@ public class CharacterSlotsScript : ModuleScript
 	public KMBombModule module;
 	public Image[] slots;
 	public Sprite[] sprites;
+	public GameObject plzHelp;
 
 	public KMSelectable[] keepButtons;
 	public KMSelectable crank;
@@ -86,6 +87,7 @@ public class CharacterSlotsScript : ModuleScript
 					}
 					catch(Exception e)
                     {
+						plzHelp.SetActive(true);
 						Log("An exception has occured. Please tell Konoko that \"{0}\" isn't a valid command for {1}. This character will be considered as valid.".Form(e.Message, slotStates[stageNumber, c].CharacterName), LogType.Exception);
                     }
 				}
@@ -150,6 +152,7 @@ public class CharacterSlotsScript : ModuleScript
 		{
 			Log("Premature ending : you kept every slot... And you're right!");
 		}
+		if (stageNumber != 3) stageStatusMat[stageNumber].material = unlitMats[3];
 		for (int slotWheel = 0; slotWheel < 3; slotWheel++)
 		{
             if (!keepStates[slotWheel]||stageNumber==3|| keepStates.All(x => x))
@@ -158,7 +161,7 @@ public class CharacterSlotsScript : ModuleScript
 				if (stageNumber == 0) slots[slotWheel].enabled = true;
 				for (int rollTime = 0; rollTime < 50; rollTime++)
 				{
-					j = RNG.Range(0, Enum.GetValues(typeof(CharacterName)).Length);
+					j = 0;//RNG.Range(0, Enum.GetValues(typeof(CharacterName)).Length);
 					slots[slotWheel].sprite = sprites[j];
 					yield return new WaitForSeconds(.01f);
 				}
@@ -250,7 +253,8 @@ public class CharacterSlotsScript : ModuleScript
 	private sbyte ModuleCheck(string modId,char posOrNeg)
 	{
 		sbyte ans = 0;
-		if (bomb.GetModuleIDs()/*.Except("characterSlots")*/.Contains(modId))
+		List<string> mods = bomb.GetModuleIDs(); mods.Remove("characterSlots");
+		if (mods.Contains(modId))
 		{
 			Log("A module with the id {0} is present on the bomb. {1}1 point.", modId, posOrNeg);
 			ans++;
@@ -290,7 +294,7 @@ public class CharacterSlotsScript : ModuleScript
 						isTrue = Comparer.SpecialNumberCompare(bomb.GetSerialNumberNumbers().Sum(), condis[2]);
 						break;
 					case "last":
-						isTrue = Comparer.SpecialNumberCompare(bomb.GetSerialNumber()[5], condis[2]);
+						isTrue = Comparer.SpecialNumberCompare(int.Parse(bomb.GetSerialNumber()[5].ToString()), condis[2]);
 						break;
 					case "dr":
 						isTrue = Comparer.SpecialNumberCompare(1 + (bomb.GetSerialNumberNumbers().Sum() - 1) % 9, condis[2]);
@@ -312,7 +316,7 @@ public class CharacterSlotsScript : ModuleScript
 				isTrue = stageNumber == int.Parse(condis[1]) - 1;
 				break;
 			case "slot":
-				char[] positions = new char[] { 'L', 'M', 'R' };
+				string[] positions = new string[] { "L", "M", "R" };
 				isTrue = positions.IndexOf(condis[1]) == position;
 				break;
 			case "ind":
@@ -380,7 +384,7 @@ public class CharacterSlotsScript : ModuleScript
 						isTrue = Comparer.Compare(bomb.GetPortCount(), int.Parse(condis[3]), condis[2]);
 						break;
 					default:
-						isTrue = Comparer.Compare(bomb.GetPorts().Select(p => condis[1].Split("|").Contains(p)).Count(), int.Parse(condis[3]), condis[2]) ;
+						isTrue = Comparer.Compare(bomb.GetPorts().Where(p => condis[1].Split("|").Contains(p)).Count(), int.Parse(condis[3]), condis[2]) ;
 						break;
 				}
 				break;
@@ -392,10 +396,11 @@ public class CharacterSlotsScript : ModuleScript
                 switch (condis[1])
                 {
 					case "left":
-						isTrue = Comparer.Compare(((int)bomb.GetTime()), int.Parse(condis[3]), condis[2]);
+						isTrue = Comparer.Compare(TimeLeft, int.Parse(condis[3]), condis[2]);
 						break;
 					case "used":
-						isTrue=Comparer.Compare((double)(1-bomb.GetTime()/Game.Mission.GeneratorSetting.TimeLimit)*100,int.Parse(condis[3]),"e"+condis[2]);
+						if (Game.Mission.GeneratorSetting.TimeLimit==0) break;
+						isTrue=Comparer.Compare((double)(1-((double)TimeLeft/Game.Mission.GeneratorSetting.TimeLimit))*100,int.Parse(condis[3]),"e"+condis[2]);
 						break;
 					default:
 						throw new ArgumentException(condis[1]+" is not a valid argument.");

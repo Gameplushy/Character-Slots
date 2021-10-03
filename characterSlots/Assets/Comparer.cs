@@ -34,7 +34,7 @@ public static class Comparer {
         {
             case "prime":
                 int[] primeNumbers = new int[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53 };
-                answer = operand.EqualsAny(primeNumbers);
+                answer = primeNumbers.Any(p => p == operand);//operand.EqualsAny(primeNumbers);
                 break;
             case "even":
                 answer = operand % 2 == 0;

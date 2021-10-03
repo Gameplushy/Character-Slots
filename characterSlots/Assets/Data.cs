@@ -549,7 +549,7 @@ namespace CharSlotsTools
             {CharacterName.MinMin,"sn count X exact 4"},
             {CharacterName.MrGameWatch,"ports RJ45 more 0"},
             {CharacterName.Ness,"slot M"},
-            {CharacterName.Olimar,"sn dr 1"},
+            {CharacterName.Olimar,"sn dr 5"},
             {CharacterName.PacMan,"ind lit more 0"},
             {CharacterName.Palutena,"ind identify any CLR"},
             {CharacterName.Peach,"ind identify unlit TRN"},
