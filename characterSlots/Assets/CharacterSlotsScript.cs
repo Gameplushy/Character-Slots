@@ -49,50 +49,16 @@ public class CharacterSlotsScript : ModuleScript
 	private void TestStage()
 	{
 		PlaySound("thrill");
-		if (!userInputPossible) return;
+		if (!userInputPossible||IsSolved) return;
 		bool isGood = true;
-		if(keepStates.All(ks=>ks) && slotStates[stageNumber,0].CharacterName== slotStates[stageNumber, 1].CharacterName && slotStates[stageNumber, 0].CharacterName== slotStates[stageNumber, 2].CharacterName)
-        {
+		if(keepStates.All(ks=>ks) && slotStates[stageNumber,0].CharacterName== slotStates[stageNumber, 1].CharacterName && slotStates[stageNumber, 0].CharacterName== slotStates[stageNumber, 2].CharacterName) 
 			Log("All 3 characters are the same!!!");
-        }
         else
-        {
 			for (int c = 0; c <= 2; c++)
 			{
-				Log("Checking validy for {0}...", slotStates[stageNumber, c].CharacterName);
-				if (slotStates[stageNumber, c].CharacterName == CharacterName.MiiFighter)
-				{
-					if (keepStates[c] && stageNumber != 0 && slotStates[stageNumber, c] == slotStates[stageNumber - 1, c])
-					{
-						Log("You already kept that Mii Fighter last stage ! That's illegal !");
-						isGood = false;
-						break;
-					}
-					else
-					{
-						Log("Mii Fighter's special rules are respected.");
-					}
-				}
-				else
-				{
-					try
-					{
-						int score = CalculateScore(slotStates[stageNumber, c], c);
-						Log("{0} has a score of {1}, so you should {2}keep it.", slotStates[stageNumber, c].CharacterName, score, score <= 0 ? "not " : "");
-						if ((score > 0) != keepStates[c])
-						{
-							isGood = false;
-							break;
-						}
-					}
-					catch(Exception e)
-                    {
-						plzHelp.SetActive(true);
-						Log("An exception has occured. Please tell Konoko that \"{0}\" isn't a valid command for {1}. This character will be considered as valid.".Form(e.Message, slotStates[stageNumber, c].CharacterName), LogType.Exception);
-                    }
-				}
+				isGood = (ValidityCheck(c) == keepStates[c]);
+				if (!isGood) break;
 			}
-		}
 		if (isGood)
 		{
 			Log("All keep states are correct. Stage {0} done!", stageNumber+1);
@@ -107,10 +73,37 @@ public class CharacterSlotsScript : ModuleScript
 		}
 	}
 
+	private bool ValidityCheck(int c)
+    {
+		Log("Checking validy for {0}...", slotStates[stageNumber, c].CharacterName);
+		if (slotStates[stageNumber, c].CharacterName == CharacterName.MiiFighter)
+		{
+			if (keepStates[c] && stageNumber != 0 && slotStates[stageNumber, c] == slotStates[stageNumber - 1, c])
+			{
+				Log("You already kept that Mii Fighter last stage ! That's illegal !");
+				return false;
+			}
+			Log("Mii Fighter's special rules are respected.");
+			return true;
+		}
+		try
+		{
+			int score = CalculateScore(slotStates[stageNumber, c], c);
+			Log("{0} has a score of {1}, so you should {2}keep it.", slotStates[stageNumber, c].CharacterName, score, score <= 0 ? "not " : "");
+			return (score > 0);
+		}
+		catch (Exception e)
+		{
+			plzHelp.SetActive(true);
+			Log("An exception has occured. Please tell Konoko that \"{0}\" isn't a valid command for {1}. This character will be considered as valid.".Form(e.Message, slotStates[stageNumber, c].CharacterName), LogType.Exception);
+			return true;
+		}
+	}
+
 	private void RememberStage(int stage)
 	{
 		PlaySound("thrill");
-		if (!userInputPossible || stage >= stageNumber) return;
+		if (!userInputPossible || stage >= stageNumber || IsSolved) return;
 		StartCoroutine(Memento(stage));
 	}
 
@@ -161,7 +154,7 @@ public class CharacterSlotsScript : ModuleScript
 				if (stageNumber == 0) slots[slotWheel].enabled = true;
 				for (int rollTime = 0; rollTime < 50; rollTime++)
 				{
-					j = 0;//RNG.Range(0, Enum.GetValues(typeof(CharacterName)).Length);
+					j = RNG.Range(0, Enum.GetValues(typeof(CharacterName)).Length);
 					slots[slotWheel].sprite = sprites[j];
 					yield return new WaitForSeconds(.01f);
 				}
@@ -184,8 +177,8 @@ public class CharacterSlotsScript : ModuleScript
 		if (!IsSolved)
 		{
 			Log("The appearing characters on stage {0} are : {1}, {2} & {3}", stageNumber + 1, slotStates[stageNumber, 0].CharacterName, slotStates[stageNumber, 1].CharacterName, slotStates[stageNumber, 2].CharacterName);
-			userInputPossible = true;
 		}
+		userInputPossible = true;
 	}
 
 	private sbyte CalculateScore(Character character, int position)
@@ -461,5 +454,72 @@ public class CharacterSlotsScript : ModuleScript
 		if (condis[condis.Length - 1].Equals("not")) isTrue = !isTrue;
 		return isTrue;
     }
+
+#pragma warning disable 414
+	private readonly string TwitchHelpMessage = @"Use [!{0} keep 1 2 3] to toggle a slot's keep status. Use [!{0} recall (1 or 2)] to recall a previous stage. Type [crank] at the end of your command (or just [!{0} crank]) to submit your answers.";
+#pragma warning restore 414
+
+	private IEnumerator ProcessTwitchCommand(string command)
+    {
+        if (!IsSolved)
+        {
+			bool validInput = false;
+			List<KMSelectable> pressThese = new List<KMSelectable>();
+			string[] commandSplit = command.ToLowerInvariant().Split();
+			if (commandSplit[0].Equals("recall") && commandSplit.Length==2 && (commandSplit[1].Equals("1") || commandSplit[1].Equals("2")))
+			{
+				validInput = true;
+				pressThese.Add(stageButtons[int.Parse(commandSplit[1]) - 1]);
+			}
+			else if (commandSplit[0].Equals("keep") && commandSplit.Skip(1).All(i => Enumerable.Range(1, 3).Select(n => n.ToString()).Any(ns=>ns.Equals(i)) || ((i.Equals("crank")) && commandSplit.Skip(1).SkipLast(1).All(n=>!n.Equals("crank")) && commandSplit.Length!=2) ))
+			{
+				validInput = true;
+				foreach (string keeper in commandSplit.Skip(1))
+				{
+					int i;
+					if(int.TryParse(keeper, out i))
+                    {
+						pressThese.Add(keepButtons[int.Parse(keeper) - 1]);
+					}
+				}
+
+			}
+			else if (commandSplit.Last().Equals("crank"))
+			{
+				validInput = true;
+				pressThese.Add(crank);
+			}
+            if (validInput)
+            {
+				yield return null;
+				yield return new WaitUntil(() => userInputPossible);
+				foreach (KMSelectable button in pressThese)
+                {
+					button.OnInteract();
+					yield return new WaitForSeconds(.10f);
+                }
+            }
+		}
+	}
+
+	private IEnumerator TwitchHandleForcedSolve() {
+		Log("I am {0} and I am starting my autosolver", Id);
+		yield return new WaitUntil(() => userInputPossible);
+		while (!IsSolved)
+        {
+			List<KMSelectable> pressThese = new List<KMSelectable>();
+			foreach(int slot in Enumerable.Range(0, 3))
+            {
+				if (keepStates[slot] != ValidityCheck(slot)) pressThese.Add(keepButtons[slot]);
+            }
+			pressThese.Add(crank);
+			foreach(KMSelectable butt in pressThese)
+            {
+				butt.OnInteract();
+				yield return new WaitUntil(() => userInputPossible);
+			}
+		}
+		Log("I am {0} and I finished my autosolver", Id);
+	}
 }
 
