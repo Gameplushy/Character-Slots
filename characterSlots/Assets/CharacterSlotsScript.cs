@@ -48,7 +48,8 @@ public class CharacterSlotsScript : ModuleScript
 
 	private void TestStage()
 	{
-		PlaySound("thrill");
+		ButtonEffect(crank, 1, PlaySound("thrill"));
+		
 		if (!userInputPossible||IsSolved) return;
 		bool isGood = true;
 		if(keepStates.All(ks=>ks) && slotStates[stageNumber,0].CharacterName== slotStates[stageNumber, 1].CharacterName && slotStates[stageNumber, 0].CharacterName== slotStates[stageNumber, 2].CharacterName) 
@@ -102,7 +103,7 @@ public class CharacterSlotsScript : ModuleScript
 
 	private void RememberStage(int stage)
 	{
-		PlaySound("thrill");
+		ButtonEffect(keepButtons[stage],1,PlaySound("thrill"));
 		if (!userInputPossible || stage >= stageNumber || IsSolved) return;
 		StartCoroutine(Memento(stage));
 	}
@@ -132,7 +133,7 @@ public class CharacterSlotsScript : ModuleScript
 
 	private void KeepToggle(int i)
 	{
-		PlaySound("thrill");
+		ButtonEffect(keepButtons[i],.5f,PlaySound("thrill"));
 		if (!userInputPossible) return;
 		keepStates[i] = !keepStates[i];
 		keepStatusMat[i].material = keepStates[i] ? unlitMats[1] : unlitMats[0];
@@ -349,7 +350,7 @@ public class CharacterSlotsScript : ModuleScript
                 else
                 {
 					float numberModules = condis[1] == "total" ? bomb.GetModuleIDs().Count() : bomb.GetSolvedModuleIDs().Count();
-					if (condis[2].Equals("divisible")) isTrue = numberModules % int.Parse(condis[3]) == 0;
+					if (condis[2].Equals("divisible")) isTrue = numberModules % int.Parse(condis[3]) == 0 && numberModules!=0;
                     else
                     {
 						if (condis[2].Equals("percent")) numberModules = (float)(numberModules / bomb.GetModuleIDs().Count()) * 100;
@@ -376,6 +377,9 @@ public class CharacterSlotsScript : ModuleScript
 					case "any":
 						isTrue = Comparer.Compare(bomb.GetPortCount(), int.Parse(condis[3]), condis[2]);
 						break;
+					case "onone":
+						isTrue = bomb.GetPortPlates().Any(pp => condis[2].Split("|").All(port => pp.Contains(port)));
+						break;
 					default:
 						isTrue = Comparer.Compare(bomb.GetPorts().Where(p => condis[1].Split("|").Contains(p)).Count(), int.Parse(condis[3]), condis[2]) ;
 						break;
@@ -389,11 +393,11 @@ public class CharacterSlotsScript : ModuleScript
                 switch (condis[1])
                 {
 					case "left":
-						isTrue = Comparer.Compare(TimeLeft, int.Parse(condis[3]), condis[2]);
+						isTrue = Comparer.Compare(Math.Floor(bomb.GetTime()), int.Parse(condis[3]), condis[2]);
 						break;
 					case "used":
 						if (Game.Mission.GeneratorSetting.TimeLimit==0) break;
-						isTrue=Comparer.Compare((double)(1-((double)TimeLeft/Game.Mission.GeneratorSetting.TimeLimit))*100,int.Parse(condis[3]),"e"+condis[2]);
+						isTrue=Comparer.Compare((double)(1-((double)bomb.GetTime() / Game.Mission.GeneratorSetting.TimeLimit))*100,int.Parse(condis[3]),"e"+condis[2]);
 						break;
 					default:
 						throw new ArgumentException(condis[1]+" is not a valid argument.");

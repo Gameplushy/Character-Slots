@@ -72,6 +72,7 @@
     Simon,
     Snake,
     Sonic,
+    Sora,
     Steve,
     Terry,
     ToonLink,

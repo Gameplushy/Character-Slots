@@ -26,11 +26,7 @@ MonoBehaviour:
     encounter bugs. Thank you again for your patience!
 
 
-    This module may also have balancing issues (too easy at some points). I''ll try
-    to fix some stuff if it doesn''t suit everyone''s taste.
-
-
     Made by Konoko.'
-  version: 1.2
+  version: 1.5
   outputFolder: build
   previewImage: {fileID: 2800000, guid: d32aeb4c30bb6374eaf5fd0f75bff35c, type: 3}
