@@ -48,7 +48,7 @@ public class CharacterSlotsScript : ModuleScript
 
 	private void TestStage()
 	{
-		ButtonEffect(crank, 1, PlaySound("thrill"));
+		ButtonEffect(crank, 1, "thrill");
 		
 		if (!userInputPossible||IsSolved) return;
 		bool isGood = true;
@@ -103,7 +103,7 @@ public class CharacterSlotsScript : ModuleScript
 
 	private void RememberStage(int stage)
 	{
-		ButtonEffect(keepButtons[stage],1,PlaySound("thrill"));
+		ButtonEffect(keepButtons[stage],1,"thrill");
 		if (!userInputPossible || stage >= stageNumber || IsSolved) return;
 		StartCoroutine(Memento(stage));
 	}
@@ -133,7 +133,7 @@ public class CharacterSlotsScript : ModuleScript
 
 	private void KeepToggle(int i)
 	{
-		ButtonEffect(keepButtons[i],.5f,PlaySound("thrill"));
+		ButtonEffect(keepButtons[i],.5f,"thrill");
 		if (!userInputPossible) return;
 		keepStates[i] = !keepStates[i];
 		keepStatusMat[i].material = keepStates[i] ? unlitMats[1] : unlitMats[0];
