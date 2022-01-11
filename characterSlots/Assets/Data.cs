@@ -324,7 +324,7 @@ namespace CharSlotsTools
             {CharacterName.Pichu,new string[] { "Probing", "monsplodeFight"}},
             {CharacterName.Pikachu,new string[] { "charge", "monsplodeWho"}},
             {CharacterName.PiranhaPlant,new string[] { "PlantIdentification", "flowerPatch"}},
-            {CharacterName.Pit,new string[] { "WhiteArrows", "Purgatory"}},
+            {CharacterName.Pit,new string[] { "WhiteArrows", "PurgatoryModule"}},
             {CharacterName.PokémonTrainer,new string[] { "TheArena", "kataDeckCreating"}},
             {CharacterName.Pyra,new string[] { "burnt", "lightspeed"}},
             {CharacterName.Richter,new string[] { "HitmanModule", "VoronoiMazeModule"}},
@@ -358,7 +358,7 @@ namespace CharSlotsTools
         public static Dictionary<CharacterName, string[]> charToDislikedModules = new Dictionary<CharacterName, string[]>()
         {
             {CharacterName.BanjoKazooie,new string[] { "HogwartsModule", "cheepCheckout"}},
-            {CharacterName.Bayonetta,new string[] { "Purgatory", "gatekeeper"}},
+            {CharacterName.Bayonetta,new string[] { "PurgatoryModule", "gatekeeper"}},
             {CharacterName.Bowser,new string[] { "AquariumModule", "VarietyModule"}},
             {CharacterName.BowserJr,new string[] { "Censorship", "rainModule"}},
             {CharacterName.Byleth,new string[] { "SymbolCycleModule", "greatVoid"}},
@@ -406,7 +406,7 @@ namespace CharSlotsTools
             {CharacterName.Ness,new string[] { "SimonSpeaksModule", "krazzBlaseball"}},
             {CharacterName.Olimar,new string[] { "marqueeMorseModule", "cruelStars"}},
             {CharacterName.PacMan,new string[] { "salts", "frankensteinsIndicator"}},
-            {CharacterName.Palutena,new string[] { "Netherite", "Purgatory"}},
+            {CharacterName.Palutena,new string[] { "Netherite", "PurgatoryModule"}},
             {CharacterName.Peach,new string[] { "Painting", "perceptron"}},
             {CharacterName.Pichu,new string[] { "resistors", "smallCircle"}},
             {CharacterName.Pikachu,new string[] { "resistors", "hideAndSeek"}},
