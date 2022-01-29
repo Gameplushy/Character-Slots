@@ -74,18 +74,18 @@ public class CharacterSlotsScript : ModuleScript
 		}
 	}
 
-	private bool ValidityCheck(int c)
+	private bool ValidityCheck(int c, bool isAutosolving = false)
     {
 		Log("Checking validy for {0}...", slotStates[stageNumber, c].CharacterName);
 		if (slotStates[stageNumber, c].CharacterName == CharacterName.MiiFighter)
 		{
-			if (keepStates[c] && stageNumber != 0 && slotStates[stageNumber, c] == slotStates[stageNumber - 1, c])
+			if ((keepStates[c]||isAutosolving) && stageNumber != 0 && slotStates[stageNumber, c] == slotStates[stageNumber - 1, c])
 			{
 				Log("You already kept that Mii Fighter last stage ! That's illegal !");
 				return false;
 			}
 			Log("Mii Fighter's special rules are respected.");
-			return true;
+			return isAutosolving?true:keepStates[c];
 		}
 		try
 		{
@@ -512,10 +512,15 @@ public class CharacterSlotsScript : ModuleScript
 		while (!IsSolved)
         {
 			List<KMSelectable> pressThese = new List<KMSelectable>();
-			foreach(int slot in Enumerable.Range(0, 3))
-            {
-				if (keepStates[slot] != ValidityCheck(slot)) pressThese.Add(keepButtons[slot]);
-            }
+			if (slotStates[stageNumber, 0].CharacterName == slotStates[stageNumber, 1].CharacterName && slotStates[stageNumber, 0].CharacterName == slotStates[stageNumber, 2].CharacterName)
+				foreach(int slot in Enumerable.Range(0, 3))
+                {
+					if (!keepStates[slot]) pressThese.Add(keepButtons[slot]);
+				}
+			else foreach (int slot in Enumerable.Range(0, 3))
+			{
+				if (keepStates[slot] != ValidityCheck(slot, true)) pressThese.Add(keepButtons[slot]);
+			}
 			pressThese.Add(crank);
 			foreach(KMSelectable butt in pressThese)
             {
@@ -523,7 +528,6 @@ public class CharacterSlotsScript : ModuleScript
 				yield return new WaitUntil(() => userInputPossible);
 			}
 		}
-		Log("I am {0} and I finished my autosolver", Id);
 	}
 }
 
