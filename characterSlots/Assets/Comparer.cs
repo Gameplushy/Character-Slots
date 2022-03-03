@@ -1,6 +1,7 @@
 ﻿using KModkit;
 using System;
 using System.Linq;
+using UnityEngine;
 
 public static class Comparer { 
     public static bool Compare(int operand1, int operand2, string operatorWanted)

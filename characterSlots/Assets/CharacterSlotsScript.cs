@@ -41,7 +41,6 @@ public class CharacterSlotsScript : ModuleScript
 		keepButtons.Assign(onInteract: KeepToggle);
 		stageButtons.Assign(onInteract: RememberStage);
 		crank.Assign(onInteract: TestStage);
-
 		foreach (MeshRenderer ball in keepStatusMat) ball.material = unlitMats[0];
 		foreach (MeshRenderer ball in stageStatusMat) ball.material = unlitMats[0];
 	}
@@ -297,8 +296,8 @@ public class CharacterSlotsScript : ModuleScript
 						isTrue = Comparer.IsLetterOrNumber(bomb.GetSerialNumber()[0], condis[2][0]) && Comparer.IsLetterOrNumber(bomb.GetSerialNumber()[1], condis[2][1]);
 						break;
 					case "count":
-						if (condis[2] == "X") Comparer.Compare(bomb.GetSerialNumberLetters().Count(), int.Parse(condis[4]), condis[3]);
-						else if (condis[2] == "#") Comparer.Compare(bomb.GetSerialNumberNumbers().Count(), int.Parse(condis[4]), condis[3]);
+						if (condis[2].Equals("X")) isTrue = Comparer.Compare(bomb.GetSerialNumberLetters().Count(), int.Parse(condis[4]), condis[3]);
+						else if (condis[2].Equals("#")) isTrue = Comparer.Compare(bomb.GetSerialNumberNumbers().Count(), int.Parse(condis[4]), condis[3]);
 						else throw new ArgumentException(condis[2] + " is not X nor #");
 						break;
                 }
