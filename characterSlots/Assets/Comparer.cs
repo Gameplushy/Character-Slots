@@ -54,7 +54,7 @@ public static class Comparer {
     {
         if (motif == 'X')
         {
-            return 'A' >= character && character <= 'Z';
+            return 'A' <= character && character <= 'Z';
         }
         else if (motif == '#')
         {

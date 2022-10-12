@@ -270,7 +270,7 @@ namespace CharSlotsTools
 
         public static Dictionary<CharacterName, string[]> charToLikedModules = new Dictionary<CharacterName, string[]>()
         {
-            {CharacterName.BanjoKazooie,new string[] { "spellingBee", "coloredHexabuttons"}},
+            {CharacterName.BanjoKazooie,new string[] { "spellingBee", "yellowHexabuttons"}},
             {CharacterName.Bayonetta,new string[] { "TheClockModule", "arsGoetiaIdentification"}},
             {CharacterName.Bowser,new string[] { "PartyTime", "superparsing"}},
             {CharacterName.BowserJr,new string[] { "graffitiNumbers", "Painting"}},
