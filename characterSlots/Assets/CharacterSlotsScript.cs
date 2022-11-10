@@ -207,11 +207,12 @@ public class CharacterSlotsScript : ModuleScript
     {
 		string[] positions = new string[] { "left", "middle", "right" };
 		sbyte res = 0;
+		List<Character> seenChars = new List<Character>();
 		for(sbyte stage = 0; stage <= stageNumber; stage++)
         {
 			for(sbyte slot = 0; slot < 3; slot++)
             {
-                if (!(slotStates[stage, slot]==character)) //Same instance = ignore
+                if ((slotStates[stage, slot]!=character) && !seenChars.Contains(slotStates[stage, slot])) //Same instance = ignore
                 {
 					if (character.LikedCharacters.Contains(slotStates[stage, slot].CharacterName))
                     {
@@ -224,8 +225,9 @@ public class CharacterSlotsScript : ModuleScript
 						Log("{0} dislikes {1} who is/was on the {2} slot of stage {3}. -1 point.", character.CharacterName, slotStates[stage, slot].CharacterName, positions[slot], stage + 1);
 						res -= 1;
 					}
-                    //else
-						//Log("{0} feels neutral towards {1} who is/was on the {2} slot of stage {3}.", character.CharacterName, slotStates[stage, slot].CharacterName, positions[slot], stage + 1);
+					//else
+					//Log("{0} feels neutral towards {1} who is/was on the {2} slot of stage {3}.", character.CharacterName, slotStates[stage, slot].CharacterName, positions[slot], stage + 1);
+					seenChars.Add(slotStates[stage, slot]);
 				}
 
             }
@@ -422,7 +424,7 @@ public class CharacterSlotsScript : ModuleScript
 			case "compare":
 				string[] operands = new string[] { condis[1], condis[2] };
 				int[] operandValues = new int[2];
-				for(int i = 0; i == 2; i++)
+				for(int i = 0; i < 2; i++)
                 {
 					operandValues[i] = Comparer.GetEdgeworkNumber(operands[i], bomb);
                 }
