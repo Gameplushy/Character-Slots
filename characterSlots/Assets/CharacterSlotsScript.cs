@@ -50,6 +50,7 @@ public class CharacterSlotsScript : ModuleScript
 		ButtonEffect(crank, 1, "thrill");
 		
 		if (!userInputPossible||IsSolved) return;
+		userInputPossible = false;
 		bool isGood = true;
 		if(keepStates.All(ks=>ks) && slotStates[stageNumber,0].CharacterName== slotStates[stageNumber, 1].CharacterName && slotStates[stageNumber, 0].CharacterName== slotStates[stageNumber, 2].CharacterName) 
 			Log("All 3 characters are the same!!!");
@@ -70,6 +71,7 @@ public class CharacterSlotsScript : ModuleScript
 		{
 			Log("Your answer for this character is incorrect. Strike!");
 			Strike();
+			userInputPossible = true;
 		}
 	}
 
@@ -346,7 +348,7 @@ public class CharacterSlotsScript : ModuleScript
                 {
 					if (condis[2].Equals("solved")) condis[2] = "more";
 					else if (condis[2].Equals("unsolved")) condis[2] = "less";
-					isTrue = Comparer.Compare(bomb.GetSolvedModuleIDs().Count(), bomb.GetModuleIDs().Count(), condis[2]);
+					isTrue = Comparer.Compare(bomb.GetSolvedModuleIDs().Count(), bomb.GetModuleIDs().Count() - bomb.GetSolvedModuleIDs().Count(), condis[2]);
                 }
                 else
                 {
