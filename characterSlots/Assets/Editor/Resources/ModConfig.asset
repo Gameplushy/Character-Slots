@@ -17,11 +17,11 @@ MonoBehaviour:
   description: '"WHO ARE YOU PEOPLE?"
 
 
-    This took about more than a year. Needless to say I''m happy that this finally
-    has at least a working version.
+    This took about more than a year. Needless to say I''m happy that this is finally
+    finished.
 
 
     Made by Konoko.'
-  version: 1.14
+  version: 1.14.2
   outputFolder: build
   previewImage: {fileID: 2800000, guid: d32aeb4c30bb6374eaf5fd0f75bff35c, type: 3}

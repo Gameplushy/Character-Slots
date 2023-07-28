@@ -77,7 +77,7 @@ public class CharacterSlotsScript : ModuleScript
 
 	private bool ValidityCheck(int c, bool isAutosolving = false)
     {
-		Log("Checking validy for {0}...", slotStates[stageNumber, c].CharacterName);
+		Log("Checking validity for {0}...", slotStates[stageNumber, c].CharacterName);
 		if (slotStates[stageNumber, c].CharacterName == CharacterName.MiiFighter)
 		{
 			if ((keepStates[c]||isAutosolving) && stageNumber != 0 && slotStates[stageNumber, c] == slotStates[stageNumber - 1, c])

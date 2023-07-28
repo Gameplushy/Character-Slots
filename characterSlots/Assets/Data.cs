@@ -535,7 +535,7 @@ namespace CharSlotsTools
             {CharacterName.Inkling,"holders exact 0"},
             {CharacterName.Isabelle,"modules compare unsolved"},
             {CharacterName.Jigglypuff,"ports PS2 more 0"},
-            {CharacterName.Joker,"sn end 4"},
+            {CharacterName.Joker,"sn last 4"},
             {CharacterName.Kazuya,"batteries all exact 1"},
             {CharacterName.Ken,"ports DVI more 0"},
             {CharacterName.KingDedede,"batteries D more 0"},
