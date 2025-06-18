@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace CharSlotsTools
 {
-    public static class Data 
+    public static class Data
     {
 
         public static Dictionary<CharacterName, string> charToSerial = new Dictionary<CharacterName, string>()
@@ -386,7 +384,7 @@ namespace CharSlotsTools
             {CharacterName.Jigglypuff,new string[] { "TheExplodingPen", "simonSupports"}},
             {CharacterName.Joker,new string[] { "giantsDrink", "BoardWalk"}},
             {CharacterName.Kazuya,new string[] { "binaryTree", "hereditaryBaseNotationModule"}},
-            {CharacterName.Ken,new string[] { "binaryTree", "KanjiModule"}},
+            {CharacterName.Ken,new string[] { "OrientationCube", "KanjiModule"}},
             {CharacterName.KingDedede,new string[] { "theCruelDuck", "Mastermind Cruel"}},
             {CharacterName.KingKRool,new string[] { "identityParade", "GameOfLifeSimple"}},
             {CharacterName.Kirby,new string[] { "StareModule", "cube"}},
